@@ -10,12 +10,12 @@ import (
 )
 
 const (
-	CoinUnit = "rps"
+	CoinUnit = "gorrillazz"
 
 	DefaultBondDenom = CoinUnit
 
 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address.
-	Bech32PrefixAccAddr = "rps"
+	Bech32PrefixAccAddr = "gorrillazz"
 )
 
 var (

@@ -48,14 +48,14 @@ var DefaultNodeHome string
 var AppConfigYAML []byte
 
 var (
-	_ runtime.AppI            = (*RPSApp)(nil)
-	_ servertypes.Application = (*RPSApp)(nil)
+	_ runtime.AppI            = (*GORRApp)(nil)
+	_ servertypes.Application = (*GORRApp)(nil)
 )
 
-// RPSApp extends an ABCI application, but with most of its parameters exported.
+// GORRApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type RPSApp struct {
+type GORRApp struct {
 	*runtime.App
 	legacyAmino       *codec.LegacyAmino
 	appCodec          codec.Codec
@@ -79,7 +79,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, ".rpsd")
+	DefaultNodeHome = filepath.Join(userHomeDir, ".gorrillazzd")
 }
 
 // AppConfig returns the default app config.
@@ -95,17 +95,17 @@ func AppConfig() depinject.Config {
 	)
 }
 
-// NewRPSApp returns a reference to an initialized RPSApp.
-func NewRPSApp(
+// NewGORRApp returns a reference to an initialized GORRApp.
+func NewGORRApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
 	loadLatest bool,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) (*RPSApp, error) {
+) (*GORRApp, error) {
 	var (
-		app        = &RPSApp{}
+		app        = &GORRApp{}
 		appBuilder *runtime.AppBuilder
 	)
 
@@ -152,13 +152,13 @@ func NewRPSApp(
 	return app, nil
 }
 
-// LegacyAmino returns RPSApp's amino codec.
-func (app *RPSApp) LegacyAmino() *codec.LegacyAmino {
+// LegacyAmino returns GORRApp's amino codec.
+func (app *GORRApp) LegacyAmino() *codec.LegacyAmino {
 	return app.legacyAmino
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
-func (app *RPSApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *GORRApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	sk := app.UnsafeFindStoreKey(storeKey)
 	kvStoreKey, ok := sk.(*storetypes.KVStoreKey)
 	if !ok {
@@ -167,7 +167,7 @@ func (app *RPSApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return kvStoreKey
 }
 
-func (app *RPSApp) kvStoreKeys() map[string]*storetypes.KVStoreKey {
+func (app *GORRApp) kvStoreKeys() map[string]*storetypes.KVStoreKey {
 	keys := make(map[string]*storetypes.KVStoreKey)
 	for _, k := range app.GetStoreKeys() {
 		if kv, ok := k.(*storetypes.KVStoreKey); ok {
@@ -179,13 +179,13 @@ func (app *RPSApp) kvStoreKeys() map[string]*storetypes.KVStoreKey {
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *RPSApp) SimulationManager() *module.SimulationManager {
+func (app *GORRApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *RPSApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *GORRApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	app.App.RegisterAPIRoutes(apiSvr, apiConfig)
 	// register swagger API in app.go so that other applications can override easily
 	if err := server.RegisterSwaggerAPI(apiSvr.ClientCtx, apiSvr.Router, apiConfig.Swagger); err != nil {

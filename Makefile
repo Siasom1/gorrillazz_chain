@@ -1,18 +1,22 @@
-BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-COMMIT := $(shell git log -1 --format='%H')
+###########
+# Version #
+###########
+
+# fallback values als git info ontbreekt
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "nogitbranch")
+COMMIT := $(shell git log -1 --format='%H' 2>/dev/null || echo "nogitcommit")
 
 # don't override user values
 ifeq (,$(VERSION))
-  VERSION := $(shell git describe --exact-match 2>/dev/null)
-  # if VERSION is empty, then populate it with branch's name and raw commit hash
+  VERSION := $(shell git describe --exact-match 2>/dev/null || echo "")
   ifeq (,$(VERSION))
     VERSION := $(BRANCH)-$(COMMIT)
   endif
 endif
 
 # Update the ldflags with the app, client & server names
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=rps \
-	-X github.com/cosmos/cosmos-sdk/version.AppName=rpsd \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=gorrillazz \
+	-X github.com/cosmos/cosmos-sdk/version.AppName=gorrillazzd \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
@@ -27,8 +31,8 @@ all: install
 install:
 	@echo "--> ensure dependencies have not been modified"
 	@go mod verify
-	@echo "--> installing rpsd"
-	@go install $(BUILD_FLAGS) -mod=readonly ./cmd/rpsd
+	@echo "--> installing gorrillazzd"
+	@go install -buildvcs=false $(BUILD_FLAGS) -mod=readonly ./cmd/gorrillazzd
 
 init:
 	./scripts/init.sh

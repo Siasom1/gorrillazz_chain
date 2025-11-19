@@ -1,4 +1,4 @@
-module github.com/0xlb/rps-chain
+module github.com/Siasom1/gorrillazz_chain
 
 go 1.21
 

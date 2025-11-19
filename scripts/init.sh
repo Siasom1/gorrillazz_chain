@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-rm -r ~/.rpsd || true
-BIN=$(which rpsd)
-CHAIN_ID="rps-1"
+rm -r ~/.gorrillazzd || true
+BIN=$(which gorrillazzd)
+CHAIN_ID="gorrillazz-1"
 
-# configure rpsd
+# configure gorrillazzd
 $BIN config set client chain-id $CHAIN_ID
 $BIN config set client keyring-backend test
 $BIN keys add alice
 $BIN keys add bob
-$BIN init test --chain-id $CHAIN_ID --default-denom rps
+$BIN init test --chain-id $CHAIN_ID --default-denom gorrillazz
 # update genesis
 $BIN genesis add-genesis-account alice 10000000rps --keyring-backend test
 $BIN genesis add-genesis-account bob 1000rps --keyring-backend test
